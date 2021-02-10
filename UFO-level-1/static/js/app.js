@@ -14,30 +14,44 @@ tableData.forEach((ufo) => {
 });
 
 // Select the button
-var button = d3.select("#button");
+var button = d3.select("#filter-btn");
+
+// Getting a reference to the input element on the page with the id property set to 'input-field'
+var inputField = d3.select("#datetime");
 
 // Create event handlers 
 button.on("click", runEnter);
+inputField.on("change", runEnter);
 
-// Complete the event handler function for the form
+// Complete the event handler function for the button and/or input field
 function runEnter() {
 
     // Prevent the page from refreshing
-    d3.event.preventDefault();
-    
-    // Select the input element and get the raw HTML node
-    var inputElement = d3.select("#datetime");
-  
+    //d3.event.preventDefault();
+      
     // Get the value property of the input element
-    var inputValue = inputElement.property("value");
+    var inputValue = inputField.property("value");
   
     console.log(inputValue);
     console.log(tableData);
   
-    var filteredData = tableData.filter(ufo => ufo.datetime === inputvalue);
+    // Filter the data to only those equaling the input field value
+    var filteredData = tableData.filter(ufo => ufo.datetime === inputValue);
   
     console.log(filteredData);
-  
+    
+    // Need to empty the table data before appending those meeting criteria
+    tbody = d3.select("tbody")
+    tbody.html("")
+
+    filteredData.forEach((ufo) => {
+      var row = tbody.append("tr");
+      Object.entries(ufo).forEach(([key, value]) => {
+        var cell = row.append("td");
+        cell.text(value);
+      })
+    });
+    
 }
 
 
